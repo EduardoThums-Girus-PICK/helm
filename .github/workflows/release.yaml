@@ -25,9 +25,22 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
+      - name: Install yq
+        shell: bash
+        run: sudo apt-get install -y yq
+
+      - name: Bump Helm Chart Version
+        run: bash bump_charts.sh
+
+      - name: Commit and push changes
+        shell: bash
+        run: |
+          git commit -m "$COMMIT_MESSAGE"
+          git push
+
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.7.0
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-        with:
-          skip_existing: true
+        # with:
+        #   skip_existing: true
