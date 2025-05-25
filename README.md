@@ -4,4 +4,5 @@ kubectl -n girus create secret generic regcred \
     --from-file=.dockerconfigjson=$HOME/.docker/config.json \
     --type=kubernetes.io/dockerconfigjson
 
-helm install -n girus teste oci://ghcr.io/eduardothums-girus-pick/helm/charts/girus
+echo $GITHUB_TOKEN | helm registry login ghcr.io -u EduardoThums --password-stdin
+helm upgrade -i -n girus teste oci://ghcr.io/eduardothums-girus-pick/helm/charts/girus --version 0.1.7
