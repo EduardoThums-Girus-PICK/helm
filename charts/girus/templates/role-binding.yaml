@@ -1,0 +1,28 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: girus-rolebinding
+  namespace: {{ include "girus.namespace" . }}
+subjects:
+  - kind: ServiceAccount
+    name: girus-sa
+    namespace: {{ include "girus.namespace" . }}
+roleRef:
+  kind: Role
+  name: girus-role
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: lab-test-user-admin-access
+  annotations:
+    description: "Permissões de administrador para ambiente educacional"
+subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: lab-test-user
+roleRef:
+  kind: ClusterRole
+  name: cluster-admin
+  apiGroup: rbac.authorization.k8s.io

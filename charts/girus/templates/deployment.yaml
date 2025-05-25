@@ -1,78 +1,83 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "girus.fullname" . }}
-  labels:
-    {{- include "girus.labels" . | nindent 4 }}
+  name: girus-backend
+  namespace: {{ include "girus.namespace" . }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.replicaCount }}
-  {{- end }}
+  replicas: {{ .Values.deployment.backend.replicas }}
   selector:
     matchLabels:
-      {{- include "girus.selectorLabels" . | nindent 6 }}
+      app: girus-backend
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       labels:
-        {{- include "girus.labels" . | nindent 8 }}
-        {{- with .Values.podLabels }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
+        app: girus-backend
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      serviceAccountName: {{ include "girus.serviceAccountName" . }}
-      {{- with .Values.podSecurityContext }}
-      securityContext:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+      serviceAccountName: girus-sa
       containers:
-        - name: {{ .Chart.Name }}
-          {{- with .Values.securityContext }}
-          securityContext:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+        - name: backend
+          image: {{ .Values.deployment.backend.image | default "linuxtips/girus-backend:latest" }}
+          imagePullPolicy: IfNotPresent
           ports:
-            - name: http
-              containerPort: {{ .Values.service.port }}
-              protocol: TCP
-          {{- with .Values.livenessProbe }}
-          livenessProbe:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          {{- with .Values.readinessProbe }}
-          readinessProbe:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          {{- with .Values.resources }}
+            - containerPort: {{ .Values.deployment.backend.port }}
+          env:
+            - name: PORT
+              value: "8080"
+            - name: GIN_MODE
+              value: "release"
+            - name: LAB_DEFAULT_IMAGE
+              valueFrom:
+                configMapKeyRef:
+                  name: girus-config
+                  key: lab.defaultImage
+                  optional: true
           resources:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          {{- with .Values.volumeMounts }}
+            requests:
+              memory: 256Mi
+              cpu: 0.5
+            limits:
+              memory: 512Mi
+              cpu: 1
           volumeMounts:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-      {{- with .Values.volumes }}
+            - name: config-volume
+              mountPath: /app/config
       volumes:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+        - name: config-volume
+          configMap:
+            name: girus-config
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: girus-frontend
+  namespace: {{ include "girus.namespace" . }}
+spec:
+  replicas: {{ .Values.deployment.frontend.replicas }}
+  selector:
+    matchLabels:
+      app: girus-frontend
+  template:
+    metadata:
+      labels:
+        app: girus-frontend
+    spec:
+      containers:
+        - name: frontend
+          image: {{ .Values.deployment.frontend.image | default "linuxtips/girus-frontend:latest" }}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: {{ .Values.deployment.frontend.port }}
+          volumeMounts:
+            - name: nginx-config
+              mountPath: /etc/nginx/conf.d
+          resources:
+            requests:
+              memory: 256Mi
+              cpu: 0.5
+            limits:
+              memory: 512Mi
+              cpu: 1
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: nginx-config

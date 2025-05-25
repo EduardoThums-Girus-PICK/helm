@@ -1,0 +1,83 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: girus-config
+  namespace: {{ include "girus.namespace" . }}
+data:
+  config.yaml: |
+    lab:
+      defaultImage: "ubuntu:latest"
+      podNamePrefix: "lab"
+      containerName: "linux-lab"
+      command:
+        - "sleep"
+        - "infinity"
+      resources:
+        cpuRequest: "100m"
+        cpuLimit: "500m"
+        memoryRequest: "64Mi"
+        memoryLimit: "256Mi"
+      envVars:
+        TERM: "xterm-256color"
+        SHELL: "/bin/bash"
+        privileged: false
+    # Outras configurações podem ser adicionadas aqui
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  namespace: {{ include "girus.namespace" . }}
+data:
+  default.conf: |
+    server {
+        listen 80;
+        server_name localhost;
+        root /usr/share/nginx/html;
+        index index.html;
+        
+        # Compressão
+        gzip on;
+        gzip_vary on;
+        gzip_min_length 1000;
+        gzip_proxied any;
+        gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+        gzip_comp_level 6;
+        
+        # Cache para recursos estáticos
+        location ~* \.(jpg|jpeg|png|gif|ico|css|js)$ {
+            expires 30d;
+            add_header Cache-Control "public, no-transform";
+        }
+        
+        # Redirecionar todas as requisições API para o backend
+        location /api/ {
+            proxy_pass http://girus-backend:8080/api/;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_buffering off;
+            proxy_request_buffering off;
+        }
+        
+        # Configuração para WebSockets
+        location /ws/ {
+            proxy_pass http://girus-backend:8080/ws/;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_read_timeout 86400;
+        }
+        
+        # Configuração para React Router
+        location / {
+            try_files $uri $uri/ /index.html;
+        }
+    }
