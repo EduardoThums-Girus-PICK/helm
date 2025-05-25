@@ -13,8 +13,8 @@ jobs:
       contents: read
       packages: write
 
-    runs-on: self-hosted
-    # runs-on: ubuntu-latest
+    # runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
