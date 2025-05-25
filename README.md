@@ -1,1 +1,2 @@
-helm repo add teste --username EduardoThums --password $GITHUB_TOKEN https://raw.githubusercontent.com/EduardoThums-Girus-PICK/helm/gh-pages
+<!-- helm repo add teste --username EduardoThums --password $GITHUB_TOKEN https://raw.githubusercontent.com/EduardoThums-Girus-PICK/helm/gh-pages -->
+helm install -n girus teste oci://ghcr.io/eduardothums-girus-pick/helm/charts/girus
