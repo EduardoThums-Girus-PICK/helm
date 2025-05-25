@@ -1,1 +1,1 @@
-helm repo add teste --username EduardoThums --password aa https://raw.githubusercontent.com/EduardoThums/private-helm-repo/main/
+helm repo add teste --username EduardoThums --password $GITHUB_TOKEN https://raw.githubusercontent.com/EduardoThums-Girus-PICK/helm/gh-pages
