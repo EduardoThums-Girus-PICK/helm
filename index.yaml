@@ -3,6 +3,16 @@ entries:
   girus:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2025-05-24T23:08:44.880543135-03:00"
+    description: A Helm chart for Kubernetes
+    digest: 47a157bfb6249abe59df49186b92131be9f3f9a585c9a84da2d33b0a8c2256bb
+    name: girus
+    type: application
+    urls:
+    - https://github.com/EduardoThums-Girus-PICK/helm/releases/download/girus-0.1.5/girus-0.1.5.tgz
+    version: 0.1.5
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2025-05-24T22:51:48.887469489-03:00"
     description: A Helm chart for Kubernetes
     digest: d0dc8beedc9caac82437ce6743494bfb0400eca7b9a1bbbb52d7f884a3f9c00b
@@ -21,4 +31,4 @@ entries:
     urls:
     - https://github.com/EduardoThums-Girus-PICK/helm/releases/download/girus-0.1.0/girus-0.1.0.tgz
     version: 0.1.0
-generated: "2025-05-24T22:51:48.887477451-03:00"
+generated: "2025-05-24T23:08:44.880557872-03:00"
