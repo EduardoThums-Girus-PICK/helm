@@ -39,7 +39,7 @@ jobs:
           helm push ./girus-${{ steps.set-variables.outputs.VERSION }}.tgz oci://${{ steps.set-variables.outputs.REPOSITORY }}/charts          
 
       - name: Generate example template manifest
-        run: helm template charts/girus > manifest.yaml
+        run: helm template --namespace girus charts/girus > manifest.yaml
 
       - name: Create release
         uses: softprops/action-gh-release@da05d552573ad5aba039eaac05058a918a7bf631 # v2.2.2
