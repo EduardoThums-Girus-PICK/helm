@@ -1,0 +1,25 @@
+name: Validate the chart templates
+
+on:
+  pull_requests:
+    branches:
+      - main
+    paths:
+      - "charts/**"
+
+jobs:
+  release:
+    runs-on: self-hosted
+
+    # runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # 4.2.2
+
+      - name: Install helm
+        uses: azure/setup-helm@b9e51907a09c216f16ebe8536097933489208112 # v4.3.0
+
+      - name: Lint helm charts
+        shell: bash
+        run: find charts -type f -name Chart.yaml -exec dirname {} \; | xargs -I {} helm lint --strict {}
