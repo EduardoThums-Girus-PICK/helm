@@ -3,14 +3,13 @@ namespaceOverride: ""
 deployment:
   backend:
     image: eduardothums/girus:backend-v1.0.0
-    usePrivateImage: false
     port: 8080
     replicas: 1
   frontend:
     image: eduardothums/girus:frontend-v1.0.5
-    usePrivateImage: false
     port: 80
     replicas: 1
+  imagePullSecretsName: ""
 
 ingress:
   enabled: false

@@ -45,8 +45,10 @@ spec:
         - name: config-volume
           configMap:
             name: girus-config
+      {{- if .Values.deployment.imagePullSecretsName }}
       imagePullSecrets:
-        - name: regcred
+        - name: {{ .Values.deployment.imagePullSecretsName }}
+      {{ end }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -83,5 +85,7 @@ spec:
         - name: nginx-config
           configMap:
             name: nginx-config
+      {{- if .Values.deployment.imagePullSecretsName }}
       imagePullSecrets:
-        - name: regcred
+        - name: {{ .Values.deployment.imagePullSecretsName }}
+      {{ end }}
