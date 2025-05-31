@@ -31,6 +31,18 @@ spec:
                   name: girus-config
                   key: lab.defaultImage
                   optional: true
+          livenessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            httpGet:
+              path: /api/v1/health
+              port: {{ .Values.deployment.backend.port }}
+          readinessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            httpGet:
+              path: /api/v1/health
+              port: {{ .Values.deployment.backend.port }}
           resources:
             requests:
               memory: 256Mi

@@ -21,7 +21,6 @@ curl -LJ https://github.com/EduardoThums-Girus-PICK/helm/releases/latest/downloa
 # or
 git clone
 cd
-helm install girus charts/girus --set deployment.imagePullSecretsName=regcred -n girus
-
+helm upgrade -i girus charts/girus -n girus --create-namespace
 ./port_foward.sh girus
 ```
