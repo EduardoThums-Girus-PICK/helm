@@ -3,8 +3,8 @@
 # Configuration
 NAMESPACE=${1:-"girus"}
 SERVICE_NAME=girus-frontend
-LOCAL_PORT=8000
-REMOTE_PORT=80
+LOCAL_PORT=8080
+REMOTE_PORT=8080
 MAX_RETRIES=5
 HEALTH_CHECK_INTERVAL=5  # seconds
 HEALTH_CHECK_TIMEOUT=2   # curl timeout in seconds

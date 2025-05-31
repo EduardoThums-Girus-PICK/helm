@@ -19,7 +19,7 @@ spec:
           image: {{ .Values.deployment.backend.image | default "linuxtips/girus-backend:latest" }}
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: {{ .Values.deployment.backend.port }}
+            - containerPort: {{ .Values.deployment.backend.containerPort }}
           env:
             - name: PORT
               value: "8080"
@@ -36,13 +36,13 @@ spec:
             periodSeconds: 10
             httpGet:
               path: /api/v1/health
-              port: {{ .Values.deployment.backend.port }}
+              port: {{ .Values.deployment.backend.containerPort }}
           readinessProbe:
             initialDelaySeconds: 5
             periodSeconds: 10
             httpGet:
               path: /api/v1/health
-              port: {{ .Values.deployment.backend.port }}
+              port: {{ .Values.deployment.backend.containerPort }}
           resources:
             requests:
               memory: 256Mi
@@ -82,7 +82,7 @@ spec:
           image: {{ .Values.deployment.frontend.image | default "linuxtips/girus-frontend:latest" }}
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: {{ .Values.deployment.frontend.port }}
+            - containerPort: {{ .Values.deployment.frontend.containerPort }}
           volumeMounts:
             - name: nginx-config
               mountPath: /etc/nginx/conf.d

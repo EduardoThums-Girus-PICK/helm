@@ -31,7 +31,7 @@ metadata:
 data:
   default.conf: |
     server {
-        listen 80;
+        listen {{ .Values.deployment.frontend.containerPort }};
         server_name localhost;
         root /usr/share/nginx/html;
         index index.html;

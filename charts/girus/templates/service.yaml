@@ -7,7 +7,7 @@ spec:
   selector:
     app: girus-backend
   ports:
-    - port: {{ .Values.deployment.backend.port }}
+    - port: {{ .Values.deployment.backend.containerPort }}
 ---
 apiVersion: v1
 kind: Service
@@ -18,4 +18,4 @@ spec:
   selector:
     app: girus-frontend
   ports:
-    - port: {{ .Values.deployment.frontend.port }}
+    - port: {{ .Values.deployment.frontend.containerPort }}
