@@ -185,6 +185,82 @@ helm upgrade -i girus girus/girus \
   --set deployment.frontend.image=eduardothums/girus:frontend-v1.0.7
 ```
 
+### Ingress
+
+Ao invés de expor a aplicação do frontend através do comando `kubectl port-foward` é possivel expo-lá pelo Ingress NGINX Controller apenas habilitando a sua configuração através do parametro `ingress.enabled`.
+
+**IMPORTANTE ⚠️:** se você estiver utilizando o kind para subir o cluster kubernetes então deve seguir as instruções na documentação oficial para configurar o [ingress](https://kind.sigs.k8s.io/docs/user/ingress). Abaixo um exemplo alterando cluster criado com o kind anteriormente na documentação:
+
+1. Delete o cluster kind
+
+```bash
+kind delete clusters kind
+```
+
+2. Crie o cluster kind com as configurações especificas para utilizar um ingress
+
+```bash
+cat <<EOF | kind create cluster --config -
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+  - role: control-plane
+    image: kindest/node:v1.32.5@sha256:e3b2327e3a5ab8c76f5ece68936e4cafaa82edf58486b769727ab0b3b97a5b0d
+    labels:
+      ingress-ready: true
+    extraPortMappings:
+    - containerPort: 80
+      hostPort: 80
+      protocol: TCP
+      listenAddress: 127.0.0.1
+    - containerPort: 443
+      hostPort: 443
+      protocol: TCP
+      listenAddress: 127.0.0.1
+  - role: worker
+    image: kindest/node:v1.32.5@sha256:e3b2327e3a5ab8c76f5ece68936e4cafaa82edf58486b769727ab0b3b97a5b0d
+EOF
+```
+
+3. Verifique os nós estão funcionando corretamente
+
+```bash
+kubectl wait --for=condition=Ready nodes --all --timeout=60s
+```
+
+4. instale o Ingress NGINX Controller
+
+```bash
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/refs/heads/main/deploy/static/provider/kind/deploy.yaml
+```
+
+5. Aguarde até que todos os serviços estejam rodando
+
+```bash
+kubectl wait --namespace ingress-nginx \
+  --for=condition=ready pod \
+  --selector=app.kubernetes.io/component=controller \
+  --timeout=90s
+```
+
+6. Instale o chart girus
+
+---
+**Via arquivo:**
+
+```bash
+cat <<EOF | helm upgrade -i girus girus/girus --values -
+ingress:
+  enabled: true
+EOF
+```
+
+**Via linha de comando:**
+
+```bash
+helm upgrade -i girus girus/girus --set ingress.enabled=true
+```
+
 ## Fluxo do CI/CD
 
 Utilizamos o GitHub Actions como plataforma de CI/CD do projeto, onde é realizado validações de segurança, boas práticas, build de imagems e publicações de releases através de tags do git.
