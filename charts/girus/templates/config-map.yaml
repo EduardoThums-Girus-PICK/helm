@@ -3,6 +3,8 @@ kind: ConfigMap
 metadata:
   name: girus-config
   namespace: {{ include "girus.namespace" . }}
+  labels:
+    {{- include "girus.labels" . | nindent 4 }}
 data:
   config.yaml: |
     lab:
@@ -28,6 +30,8 @@ kind: ConfigMap
 metadata:
   name: nginx-config
   namespace: {{ include "girus.namespace" . }}
+  labels:
+    {{- include "girus.labels" . | nindent 4 }}
 data:
   default.conf: |
     server {

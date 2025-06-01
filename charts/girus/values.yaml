@@ -1,14 +1,15 @@
 namespaceOverride: ""
 
+label:
+  partOf: girus
+
 deployment:
   backend:
-    # image: eduardothums/girus:backend-v1.0.0@sha256:fd0ab0a903e16f5e43197c10d6dc3f2e48d7855ae551730aa22899ef977ef3a9
-    image: girus-backend:1
+    image: eduardothums/girus:backend-v1.0.1
     containerPort: 8080
     replicas: 1
   frontend:
-    # image: eduardothums/girus:frontend-v1.0.5@sha256:84d3847d6ac16f0c09cfdb52125fbff3adb91c75ae2810c42255885fb30fbc99
-    image: girus-frontend:1
+    image: eduardothums/girus:frontend-v1.0.8
     containerPort: 8080
     replicas: 1
   imagePullSecretsName: ""

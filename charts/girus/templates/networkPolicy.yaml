@@ -4,6 +4,8 @@ kind: NetworkPolicy
 metadata:
   name: deny-all-ingress-egress
   namespace: {{ include "girus.namespace" . }}
+  labels:
+    {{- include "girus.labels" . | nindent 4 }}
 spec:
   policyTypes:
     - Ingress
@@ -15,6 +17,8 @@ kind: NetworkPolicy
 metadata:
   name: allow-namespace-egress
   namespace: {{ include "girus.namespace" . }}
+  labels:
+    {{- include "girus.labels" . | nindent 4 }}
 spec:
   policyTypes:
     - Egress
@@ -30,6 +34,8 @@ kind: NetworkPolicy
 metadata:
   name: allow-namespace-ingress-coredns
   namespace: {{ include "girus.namespace" . }}
+  labels:
+    {{- include "girus.labels" . | nindent 4 }}
 spec:
   policyTypes:
     - Egress
@@ -51,6 +57,8 @@ kind: NetworkPolicy
 metadata:
   name: allow-backend-ingress-kube-apiserver
   namespace: {{ include "girus.namespace" . }}
+  labels:
+    {{- include "girus.labels" . | nindent 4 }}
 spec:
   policyTypes:
     - Egress
@@ -72,6 +80,8 @@ kind: NetworkPolicy
 metadata:
   name: allow-frontend-ingress-backend
   namespace: {{ include "girus.namespace" . }}
+  labels:
+    {{- include "girus.labels" . | nindent 4 }}
 spec:
   policyTypes:
     - Ingress
@@ -93,6 +103,8 @@ kind: NetworkPolicy
 metadata:
   name: allow-nginx-ingress-frontend
   namespace: {{ include "girus.namespace" . }}
+  labels:
+    {{- include "girus.labels" . | nindent 4 }}
 spec:
   policyTypes:
     - Ingress

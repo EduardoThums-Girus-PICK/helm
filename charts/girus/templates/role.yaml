@@ -3,6 +3,8 @@ kind: Role
 metadata:
   name: girus-role
   namespace: {{ include "girus.namespace" . }}
+  labels:
+    {{- include "girus.labels" . | nindent 4 }}
 rules:
   - apiGroups: [""]
     resources: ["pods", "pods/log", "pods/exec"]

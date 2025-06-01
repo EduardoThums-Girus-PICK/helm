@@ -3,6 +3,8 @@ kind: RoleBinding
 metadata:
   name: girus-rolebinding
   namespace: {{ include "girus.namespace" . }}
+  labels:
+    {{- include "girus.labels" . | nindent 4 }}
 subjects:
   - kind: ServiceAccount
     name: girus-sa
@@ -18,6 +20,8 @@ metadata:
   name: lab-test-user-admin-access
   annotations:
     description: "Permissões de administrador para ambiente educacional"
+  labels:
+    {{- include "girus.labels" . | nindent 4 }}
 subjects:
   - kind: ServiceAccount
     name: default

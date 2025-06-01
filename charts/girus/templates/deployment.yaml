@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   name: girus-backend
   namespace: {{ include "girus.namespace" . }}
+  labels:
+    {{- include "girus.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.deployment.backend.replicas }}
   selector:
@@ -12,6 +14,7 @@ spec:
     metadata:
       labels:
         app: girus-backend
+        {{- include "girus.labels" . | nindent 8 }}
     spec:
       serviceAccountName: girus-sa
       containers:
@@ -67,6 +70,8 @@ kind: Deployment
 metadata:
   name: girus-frontend
   namespace: {{ include "girus.namespace" . }}
+  labels:
+    {{- include "girus.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.deployment.frontend.replicas }}
   selector:
@@ -76,6 +81,7 @@ spec:
     metadata:
       labels:
         app: girus-frontend
+        {{- include "girus.labels" . | nindent 8 }}
     spec:
       containers:
         - name: frontend
