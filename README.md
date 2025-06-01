@@ -245,6 +245,24 @@ kubectl wait --namespace ingress-nginx \
 
 6. Instale o chart girus
 
+```bash
+helm install -n girus --create-namespace girus girus/girus --set ingress.enabled=true
+```
+
+7. Aguarde até que todos os serviços estejam executando corretamente
+
+```bash
+kubectl -n girus wait pod --all --for=condition=Ready -l app.kubernetes.io/part-of=girus --timeout 60s
+```
+
+8. Verifique que o ingress foi criado no namespace girus
+
+```bash
+kubectl -n girus get ingress
+```
+
+9. Accesse a aplicação através do endereço http://localhost
+
 ---
 **Via arquivo:**
 

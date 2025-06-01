@@ -17,5 +17,5 @@ spec:
               service:
                 name: girus-frontend
                 port:
-                  number: {{ .Values.deployment.frontend.port }}
+                  number: {{ .Values.deployment.frontend.containerPort }}
 {{ end }}

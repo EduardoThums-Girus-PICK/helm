@@ -94,7 +94,7 @@ spec:
             matchLabels:
               app: girus-frontend
       ports:
-        - port: {{ .Values.deployment.backend.port }}
+        - port: {{ .Values.deployment.backend.containerPort }}
           protocol: TCP
 ---
 {{- if .Values.ingress.enabled }}
@@ -120,6 +120,6 @@ spec:
             matchLabels:
               app.kubernetes.io/name: ingress-nginx
       ports:
-        - port: {{ .Values.deployment.frontend.port }}
+        - port: {{ .Values.deployment.frontend.containerPort }}
           protocol: TCP
 {{ end }}
