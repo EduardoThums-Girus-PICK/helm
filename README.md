@@ -25,8 +25,6 @@ apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
   - role: control-plane
     image: kindest/node:v1.32.5@sha256:e3b2327e3a5ab8c76f5ece68936e4cafaa82edf58486b769727ab0b3b97a5b0d
-  - role: worker
-    image: kindest/node:v1.32.5@sha256:e3b2327e3a5ab8c76f5ece68936e4cafaa82edf58486b769727ab0b3b97a5b0d
 EOF
 ```
 
@@ -66,25 +64,31 @@ kubectl -n girus wait pod --all --for=condition=Ready -l app.kubernetes.io/part-
 
 ### Instalando via kubectl
 
-1. Execute o comando `kubectl apply` apontando para o manifesto gerado na ultima release
+1. Crie o namespace `girus`
+
+```bash
+kubectl create namespace girus
+```
+
+2. Execute o comando `kubectl apply` apontando para o manifesto gerado na ultima release
 
 ```bash
 curl -LJ https://github.com/EduardoThums-Girus-PICK/helm/releases/latest/download/manifest.yaml | kubectl apply -f -
 ```
 
-2. Aguarde até que todos os serviços estejam executando corretamente
+3. Aguarde até que todos os serviços estejam executando corretamente
 
 ```bash
 kubectl -n girus wait pod --all --for=condition=Ready -l app.kubernetes.io/part-of=girus --timeout 60s
 ```
 
-4. Execute o script `port_foward.sh` que ira abrir a porta 8000 para acessar a aplicação do frontend
+5. Execute o script `port_foward.sh` que ira abrir a porta 8000 para acessar a aplicação do frontend
 
 ```bash
 ./port_foward.sh
 ```
 
-5. Acesse o endereço da aplicação em http://localhost:8000
+6. Acesse o endereço da aplicação em http://localhost:8000
 
 
 ### Instalando via helm através do código fonte
@@ -217,8 +221,6 @@ nodes:
       hostPort: 443
       protocol: TCP
       listenAddress: 127.0.0.1
-  - role: worker
-    image: kindest/node:v1.32.5@sha256:e3b2327e3a5ab8c76f5ece68936e4cafaa82edf58486b769727ab0b3b97a5b0d
 EOF
 ```
 

@@ -5,11 +5,13 @@ label:
 
 deployment:
   backend:
-    image: eduardothums/girus:backend-v1.0.1
+    # image: eduardothums/girus:backend-v1.0.1
+    image: girus-backend
     containerPort: 8080
     replicas: 1
   frontend:
-    image: eduardothums/girus:frontend-v1.0.8
+    # image: eduardothums/girus:frontend-v1.0.8
+    image: girus-frontend
     containerPort: 8080
     replicas: 1
   imagePullSecretsName: ""
