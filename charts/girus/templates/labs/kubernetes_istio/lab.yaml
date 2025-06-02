@@ -1,0 +1,125 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kubernetes-istio-demo
+  namespace: girus
+  labels:
+    app: girus-lab-template
+data:
+  lab.yaml: |
+    name: kubernetes-istio-demo
+    title: "Introdução ao Shell Script Bash"
+    description: "Crie seus primeiros scripts Bash, aprendendo sobre variáveis, loops e condicionais neste laboratório detalhado e guiado. Ideal para iniciantes que querem dominar os conceitos básicos de automação no Linux."
+    duration: 25m
+    image: "eduardothums/a3e4b375-dc15-4d77-b47f-cb3aedbc2aab:v1.0.7"
+    tasks:
+      - name: "Criando o Nosso Primeiro Ingress Gateway"
+        description: "Aprenda a utilizar o istioctl"
+        steps:
+          - "Para expor serviços do cluster externamente, usamos o **Ingress Gateway** do Istio. Ele recebe o tráfego na borda do cluster e pode aplicar políticas de segurança, autenticação etc."
+          - "Existem **dois tipos** de Gateway:"
+          - "- **Ingress Gateway**: Tráfego **entrando** no cluster."
+          - "- **Egress Gateway**: Tráfego **saindo** do cluster."
+          - "Vamos criar um Gateway simples no namespace giropops. Crie um arquivo YAML (ingress-gateway.yaml):"
+          - "- O \"selector\" indica que este Gateway será servido pelo **istio-ingressgateway**."
+          - "- Ele escuta na porta **80** para qualquer host."
+          - "Para aplicar essa configuração:"
+          - "Agora temos uma \"porta de entrada\" (porta 80) no namespace giropops."
+
+      - name: "Meu Primeiro VirtualService"
+        description: "O VirtualService dita como o tráfego que chega ao Gateway é roteado para os serviços internos."
+        steps:
+          - "Vamos criar dois *Deployments*:"
+          - "`kubectl create deployment nginx-giropops --image linuxtips/nginx_giropops:v1 --replicas 1 -n giropops`"
+          - "`kubectl expose deployment nginx-giropops --port 80 -n giropops`"
+          - "`kubectl create deployment nginx-strigus --image linuxtips/nginx_strigus:v1 --replicas 1 -n giropops`"
+          - "`kubectl expose deployment nginx-strigus --port 80 -n giropops`"
+          - "Cada um serve uma página HTML simples com mensagens diferentes. Para rotear o tráfego, crie um arquivo virtualservice.yaml:"
+          - |
+            ```yaml
+            apiVersion: networking.istio.io/v1
+            kind: VirtualService
+            metadata:
+              name: nginx-giropops
+              namespace: giropops
+            spec:
+              hosts:
+                - "*"
+              gateways:
+                - giropops
+              http:
+                - name: nginx-giropops
+                  match:
+                    - uri:
+                        prefix: /giropops
+                  rewrite:
+                    uri: "/"
+                  route:
+                    - destination:
+                        host: nginx-giropops
+                        port:
+                          number: 80
+                - name: nginx-strigus
+                  match:
+                    - uri:
+                        prefix: /strigus
+                  rewrite:
+                    uri: "/"
+                  route:
+                    - destination:
+                        host: nginx-strigus
+                        port:
+                          number: 80
+            ```
+          - "Aplica a configuração:"
+          - "`kubectl apply -f virtualservice.yaml`"
+          - "Pronto! Se tudo deu certo, quando você **acessar** o Ingress Gateway e usar o caminho /giropops, o Istio envia a requisição ao **nginx-giropops**. Já /strigus vai para o **nginx-strigus**."
+
+      - name: "Meu Primeiro VirtualService"
+        description: "O VirtualService dita como o tráfego que chega ao Gateway é roteado para os serviços internos."
+        steps:
+          - "Vamos criar dois *Deployments*:"
+          - "`kubectl create deployment nginx-giropops --image linuxtips/nginx_giropops:v1 --replicas 1 -n giropops`"
+          - "`kubectl expose deployment nginx-giropops --port 80 -n giropops`"
+          - "`kubectl create deployment nginx-strigus --image linuxtips/nginx_strigus:v1 --replicas 1 -n giropops`"
+          - "`kubectl expose deployment nginx-strigus --port 80 -n giropops`"
+          - "Cada um serve uma página HTML simples com mensagens diferentes. Para rotear o tráfego, crie um arquivo virtualservice.yaml:"
+          - |
+            ```yaml
+            apiVersion: networking.istio.io/v1
+            kind: VirtualService
+            metadata:
+              name: nginx-giropops
+              namespace: giropops
+            spec:
+              hosts:
+                - "*"
+              gateways:
+                - giropops
+              http:
+                - name: nginx-giropops
+                  match:
+                    - uri:
+                        prefix: /giropops
+                  rewrite:
+                    uri: "/"
+                  route:
+                    - destination:
+                        host: nginx-giropops
+                        port:
+                          number: 80
+                - name: nginx-strigus
+                  match:
+                    - uri:
+                        prefix: /strigus
+                  rewrite:
+                    uri: "/"
+                  route:
+                    - destination:
+                        host: nginx-strigus
+                        port:
+                          number: 80
+            ```
+          - "Aplica a configuração:"
+          - "`kubectl apply -f virtualservice.yaml`"
+          - "Pronto! Se tudo deu certo, quando você **acessar** o Ingress Gateway e usar o caminho /giropops, o Istio envia a requisição ao **nginx-giropops**. Já /strigus vai para o **nginx-strigus**."

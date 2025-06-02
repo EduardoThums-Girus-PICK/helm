@@ -17,7 +17,7 @@ check_health() {
 
 # Function to start kubectl port-forward
 start_port_forward() {
-    echo "Starting port-forward to service/$SERVICE_NAME..."
+    echo "Iniciando o port-forward para o service/$SERVICE_NAME..."
     kubectl port-forward svc/$SERVICE_NAME $LOCAL_PORT:$REMOTE_PORT -n $NAMESPACE &
     PF_PID=$!
 }
@@ -30,6 +30,8 @@ while [ $retry_count -lt $MAX_RETRIES ]; do
 
     echo "Waiting for port-forward process (PID $PF_PID) to become healthy..."
     sleep 2
+
+    echo "Access the application at http://localhost:$LOCAL_PORT"
 
     while kill -0 $PF_PID 2>/dev/null; do
         if check_health; then
