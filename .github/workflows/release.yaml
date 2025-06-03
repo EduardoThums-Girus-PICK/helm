@@ -78,7 +78,7 @@ jobs:
         run: helm repo add --force-update giropops https://eduardothums.github.io/giropops-helm-repo
        
       - name: Install/upgrade release
-        run: helm upgrade --install --namespace giropops --create-namespace giropops-senhas giropops-senhas/giropops-senhas
+        run: helm upgrade --install --namespace giropops --create-namespace giropops giropops-senhas/giropops-senhas
       
       - name: Install/upgrade release
         run: kubectl get pod --namespace giropops
