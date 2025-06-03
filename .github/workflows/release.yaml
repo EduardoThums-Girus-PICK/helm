@@ -77,7 +77,12 @@ jobs:
       #   run: helm upgrade --install --namespace girus --create-namespace girus girus/girus
 
       - name: Generate example template manifest
-        run: helm template --namespace girus charts/girus > manifest.yaml 
+        run: |
+          helm template \
+            --namespace girus \
+            --set deployment.backend.image=eduardothums/a3e4b375-dc15-4d77-b47f-cb3aedbc2aab:backend \
+            --set deployment.frontend.image=eduardothums/a3e4b375-dc15-4d77-b47f-cb3aedbc2aab:frontend \
+            charts/girus > manifest.yaml 
 
       - name: Apply chart manifest
         run: kubectl apply -f manifest.yaml 
