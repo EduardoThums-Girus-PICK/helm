@@ -2,60 +2,14 @@ name: Release Charts
 
 on:
   push:
-    tags:
-      - "v*.*.*"
-    paths:
-      - "charts/**"
-  # workflow_dispatch: {}
+    branches:
+      - main
 
 jobs:
-  # package-helm-chart:
-  #   permissions:
-  #     contents: write
-  #     packages: write
-
-  #   runs-on: self-hosted
-  #   # runs-on: ubuntu-latest
-
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # 4.2.2
-
-  #     - name: Set environment variables
-  #       id: set-variables
-  #       run: |
-  #         echo "REPOSITORY=ghcr.io/$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_OUTPUT"
-  #         echo "VERSION=$(yq -r .version ./charts/girus/Chart.yaml)" >> "$GITHUB_OUTPUT"          
-
-  #     - name: Login to GitHub Container Registry
-  #       uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772 # v3.4.0
-  #       with:
-  #         registry: ghcr.io
-  #         username: ${{ github.actor }}
-  #         password: ${{ github.token }}
-
-  #     - name: Package and push helm chart
-  #       run: |
-  #         helm package ./charts/girus
-  #         helm push ./girus-${{ steps.set-variables.outputs.VERSION }}.tgz oci://${{ steps.set-variables.outputs.REPOSITORY }}/charts          
-
-  #     - name: Generate example template manifest
-  #       run: helm template --namespace girus charts/girus > manifest.yaml
-
-  #     - name: Create release
-  #       uses: softprops/action-gh-release@da05d552573ad5aba039eaac05058a918a7bf631 # v2.2.2
-  #       with:
-  #         files: manifest.yaml
-
-  deploy-oke:
-    env:
-      OCI_CLI_USER: ${{ secrets.OCI_CLI_USER }}
-      OCI_CLI_TENANCY: ${{ secrets.OCI_CLI_TENANCY }}
-      OCI_CLI_FINGERPRINT: ${{ secrets.OCI_CLI_FINGERPRINT }}
-      OCI_CLI_KEY_CONTENT: ${{ secrets.OCI_CLI_KEY_CONTENT }}
-      OCI_CLI_REGION: ${{ secrets.OCI_CLI_REGION }}
-
-    # needs: package-helm-chart
+  release:
+    permissions:
+      contents: write
+      packages: write
 
     runs-on: self-hosted
     # runs-on: ubuntu-latest
@@ -63,29 +17,26 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # 4.2.2
-
-      - name: Configure Kubectl
-        uses: oracle-actions/configure-kubectl-oke@v1.5.0
-        id: test-configure-kubectl-oke-action
         with:
-          cluster: ${{ secrets.OKE_CLUSTER_OCID }}
+          fetch-depth: 0
 
-      # - name: Add helm repo
-      #   run: helm repo add --force-update girus https://EduardoThums-Girus-PICK.github.io/helm
-       
-      # - name: Install/upgrade release
-      #   run: helm upgrade --install --namespace girus --create-namespace girus girus/girus
-
-      - name: Generate example template manifest
+      - name: Configure Git
         run: |
-          helm template \
-            --namespace girus \
-            --set deployment.backend.image=eduardothums/a3e4b375-dc15-4d77-b47f-cb3aedbc2aab:backend \
-            --set deployment.frontend.image=eduardothums/a3e4b375-dc15-4d77-b47f-cb3aedbc2aab:frontend \
-            charts/girus > manifest.yaml 
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
-      - name: Apply chart manifest
-        run: kubectl apply -f manifest.yaml 
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@cae68fefc6b5f367a0275617c9f83181ba54714f # v1.7.0
+        id: release
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
-      - name: Wait until pods are ready
-        run: kubectl -n girus wait pod --all --for=condition=Ready -l app.kubernetes.io/part-of=girus --timeout 60s
+      - name: Generate manifest from chart template
+        shell: bash
+        run: helm template --namespace girus charts/girus > manifest.yaml
+
+      - name: Upload manifest to chart release
+        shell: bash
+        run: gh release upload ${{ steps.release.outputs.chart_version }} --repo ${{ github.repository }} manifest.yaml
+        env:
+          GH_TOKEN: ${{ github.token }}
