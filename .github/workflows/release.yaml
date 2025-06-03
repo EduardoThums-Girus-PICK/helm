@@ -6,7 +6,7 @@ on:
       - "v*.*.*"
     paths:
       - "charts/**"
-  workflow_dispatch: {}
+  # workflow_dispatch: {}
 
 jobs:
   package-helm-chart:
@@ -59,7 +59,7 @@ jobs:
       OCI_CLI_REGION: ${{ secrets.OCI_CLI_REGION }}
 
     needs: package-helm-chart
-    if: github.event_name == 'workflow_dispatch'
+    # if: github.event_name == 'workflow_dispatch'
 
     runs-on: self-hosted
     # runs-on: ubuntu-latest
