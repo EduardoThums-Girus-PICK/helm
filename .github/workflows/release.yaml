@@ -75,10 +75,10 @@ jobs:
           cluster: ${{ secrets.OKE_CLUSTER_OCID }}
 
       - name: Add helm repo
-        run: helm repo add --force-update giropops https://eduardothums.github.io/giropops-helm-repo
+        run: helm repo add --force-update giropops-senhas https://eduardothums.github.io/giropops-helm-repo
        
       - name: Install/upgrade release
-        run: helm upgrade --install --namespace giropops --create-namespace giropops giropops-senhas/giropops-senhas
+        run: helm upgrade --install --namespace giropops --create-namespace giropops-senhas giropops-senhas/giropops-senhas
       
       - name: Install/upgrade release
         run: kubectl get pod --namespace giropops
