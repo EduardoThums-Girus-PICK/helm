@@ -39,4 +39,4 @@ jobs:
         shell: bash
         run: gh release upload ${{ steps.release.outputs.chart_version }} --repo ${{ github.repository }} manifest.yaml
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
