@@ -62,6 +62,10 @@ jobs:
         shell: bash
         run: helm template --namespace girus charts/girus > manifest.yaml
 
+      - name: Create girus namespace
+        shell: bash
+        run: kubectl create namespace girus || true
+
       - name: Deploy chart manifest
         shell: bash
         run: kubectl --kubeconfig kubeconfig apply -f manifest.yaml
