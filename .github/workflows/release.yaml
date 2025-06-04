@@ -40,3 +40,32 @@ jobs:
         run: gh release upload ${{ steps.release.outputs.chart_version }} --repo ${{ github.repository }} manifest.yaml
         env:
           GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+  deploy:
+    runs-on: self-hosted
+    needs: release
+    # runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # 4.2.2
+        with:
+          fetch-depth: 0
+
+      - name: Configure kubeconfig from secrets
+        shell: bash
+        run: echo -n "$RACKSPACE_KUBECONFIG" | base64 -d > kubeconfig
+        env:
+          RACKSPACE_KUBECONFIG: "${{ secrets.RACKSPACE_KUBECONFIG }}"
+
+      - name: Generate manifest from chart template
+        shell: bash
+        run: helm template --namespace girus charts/girus > manifest.yaml
+
+      - name: Deploy chart manifest
+        shell: bash
+        run: kubectl --kubeconfig kubeconfig apply -f manifest.yaml
+
+      - name: Wait until resources are deployed
+        shell: bash
+        run: kubectl --kubeconfig kubeconfig -n girus wait pod --all --for=condition=Ready -l app.kubernetes.io/part-of=girus --timeout 60s
