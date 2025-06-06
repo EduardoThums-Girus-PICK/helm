@@ -27,7 +27,6 @@ jobs:
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@cae68fefc6b5f367a0275617c9f83181ba54714f # v1.7.0
-        id: release
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
@@ -37,10 +36,7 @@ jobs:
 
       - name: Upload manifest to chart release
         shell: bash
-        # run: gh release upload --clobber ${{ steps.release.outputs.chart_version }} --repo ${{ github.repository }} manifest.yaml
-        run: |
-          echo ${{ steps.release.outputs.changed_charts }}
-          echo ${{ steps.release.outputs.chart_version }}
+        run: gh release upload --clobber $(yq -r '.version' charts/girus/Chart.yaml) --repo ${{ github.repository }} manifest.yaml
         env:
           GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
