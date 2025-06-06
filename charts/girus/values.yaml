@@ -5,7 +5,7 @@ label:
 
 deployment:
   backend:
-    image: eduardothums/girus:backend-v1.0.2
+    image: eduardothums/girus:backend-v1.0.3
     containerPort: 8080
     replicas: 1
   frontend:
