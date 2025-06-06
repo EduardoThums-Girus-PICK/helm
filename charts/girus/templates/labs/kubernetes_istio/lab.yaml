@@ -12,7 +12,7 @@ data:
     title: "Introdução Istio no Kubernetes"
     description: "Aprenda sobre Istio no Kubernetes"
     duration: 25m
-    image: "girus-k8s"
+    image: "eduardothums/girus:k8s-demo-v1.0.8"
     tasks:
       - name: "Criando o Nosso Primeiro Ingress Gateway"
         description: "Aprenda a utilizar o istioctl"
