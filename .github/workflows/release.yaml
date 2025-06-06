@@ -34,9 +34,15 @@ jobs:
         shell: bash
         run: helm template --namespace girus charts/girus > manifest.yaml
 
+      - name: Extract chart data
+        shell: bash
+        run: |
+          echo "CHART_NAME=$(yq -r '.name' charts/girus/Chart.yaml)" >> $GITHUB_ENV
+          echo "CHART_VERSION=$(yq -r '.version' charts/girus/Chart.yaml)" >> $GITHUB_ENV
+
       - name: Upload manifest to chart release
         shell: bash
-        run: gh release upload --clobber $(yq -r '.version' charts/girus/Chart.yaml) --repo ${{ github.repository }} manifest.yaml
+        run: gh release upload --clobber "$CHART_NAME-$CHART_VERSION" --repo ${{ github.repository }} manifest.yaml
         env:
           GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
