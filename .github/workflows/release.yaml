@@ -38,7 +38,9 @@ jobs:
       - name: Upload manifest to chart release
         shell: bash
         # run: gh release upload --clobber ${{ steps.release.outputs.chart_version }} --repo ${{ github.repository }} manifest.yaml
-        run: echo ${{ steps.release.outputs.chart_version }}
+        run: |
+          echo ${{ steps.release.outputs.changed_charts }}
+          echo ${{ steps.release.outputs.chart_version }}
         env:
           GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
