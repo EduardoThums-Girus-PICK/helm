@@ -145,7 +145,7 @@ Este repositório contém todos os labs disponíveis para serem instalados no ba
 git clone https://github.com/badtuxx/girus-cli
 ```
 
-2 Aplique os labs no cluster
+2. Aplique os labs no cluster
 
 Com o repositório clonado, vamos aplicar todos os arquivos `lab.yaml` (exceto o exemplo) dentro do namespace `girus`.
 
