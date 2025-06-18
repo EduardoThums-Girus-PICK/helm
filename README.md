@@ -120,6 +120,63 @@ kubectl -n girus wait pod --all --for=condition=Ready -l app.kubernetes.io/part-
 
 5. Acesse o endereço da aplicação em http://localhost:8000
 
+## 🧪 Adicionando Novos Labs ao Girus
+
+Para adicionar novos labs à aplicação **Girus**, utilizaremos o repositório oficial de labs mantido pela comunidade, disponível no GitHub.
+
+> 📦 Repositório dos labs: [https://github.com/badtuxx/girus-cli](https://github.com/badtuxx/girus-cli)
+
+### ✅ Pré-requisitos
+
+Antes de começar, certifique-se de que:
+
+* O cluster Kubernetes está rodando e acessível
+* O namespace `girus` está criado
+* O `kubectl` está configurado para apontar para o cluster correto
+
+
+### 📘 Passo a passo
+
+1. Clone o repositório de labs
+
+Este repositório contém todos os labs disponíveis para serem instalados no backend do Girus.
+
+```bash
+git clone https://github.com/badtuxx/girus-cli
+```
+
+2 Aplique os labs no cluster
+
+Com o repositório clonado, vamos aplicar todos os arquivos `lab.yaml` (exceto o exemplo) dentro do namespace `girus`.
+
+```bash
+find girus-cli/labs -type f -name "lab.yaml" ! -wholename '*/exemplo-lab/lab.yaml' -exec kubectl -n girus apply -f {} \;
+```
+
+> 🔍 Esse comando procura por todos os arquivos `lab.yaml`, exceto o de exemplo (`exemplo-lab`), e os aplica no cluster.
+
+3. Reinicie o backend do Girus
+
+Após adicionar os novos labs, precisamos reiniciar o backend para que ele carregue as novas configurações.
+
+```bash
+kubectl -n girus rollout restart deployment girus-backend
+```
+
+4. Aguarde o backend estar pronto
+
+Garanta que o backend foi reiniciado com sucesso e está rodando corretamente antes de usar os novos labs.
+
+```bash
+kubectl -n girus wait pod --all --for=condition=Ready -l app=girus-backend --timeout=60s
+```
+
+### 🟢 Pronto!
+
+Os novos labs agora estão disponíveis e prontos para uso no ambiente Girus.
+
+> 💡 Dica: Se você estiver testando labs personalizados, você pode criar seu próprio diretório com um `lab.yaml` seguindo o padrão dos exemplos existentes no repositório.
+
 ## ⚙️ Configurações do chart através dos values
 
 Para configurar certos aspectos do chart como qual imagem utilizar no backend, quantidade de replicas, se tem possui integração com Ingress NGINX Controller, etc é preciso fornecer parametros na instalação/atualização, todos os parametros podem ser encontrados no arquivo [values.yaml](./charts/girus/values.yaml). Abaixo a explicação de cada parametro:
