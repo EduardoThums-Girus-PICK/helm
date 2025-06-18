@@ -15,6 +15,19 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
+  name: deny-all-ingress-egress
+  namespace: lab-test-user
+  labels:
+    {{- include "girus.labels" . | nindent 4 }}
+spec:
+  policyTypes:
+    - Ingress
+    - Egress
+  podSelector: {}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
   name: allow-namespace-egress
   namespace: {{ include "girus.namespace" . }}
   labels:
