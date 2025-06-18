@@ -1,10 +1,10 @@
-# Repositório Helm Girus
+# 📦 Repositório Helm Girus
 
 Este repositório serve como um repositório Helm público para a aplicação [Girus](https://linuxtips.io/girus-labs/), hospedando charts que são automaticamente empacotados e versionados através da GitHub Action [`helm/chart-releaser-action`](https://github.com/helm/chart-releaser-action).
 
 A cada nova release, os charts são publicados automaticamente na seção de GitHub Releases, e os pacotes `.tgz` e `index.yaml` são atualizados na branch `gh-pages`, tornando este repositório compatível com o Helm como repositório de charts.
 
-## Como utilizar
+## 🧭 Como utilizar
 
 Para utilizar este repositório Helm é necessário os seguintes pré-requisitos
 
@@ -12,7 +12,7 @@ Para utilizar este repositório Helm é necessário os seguintes pré-requisitos
 2. Kubectl instalado
 3. Cluster kubernetes rodando
 
-### Criando um cluster kubernetes com kind
+### ⚙️ Criando um cluster kubernetes com kind
 
 Para fins educativos vamos utilizar a ferramenta kind (kubernetes-in-docker) que faz o use de containers docker para criar um cluster kubernetes de forma local. Instale a ferramenta kind de acordo com a [documentação oficial](https://kind.sigs.k8s.io/#installation-and-usage) e seguia a instruções abaixo:
 
@@ -34,7 +34,7 @@ EOF
 kubectl wait --for=condition=Ready nodes --all --timeout=60s
 ```
 
-### Instalando via helm através do repositório (recomendado)
+### 📥 Instalando via helm através do repositório (recomendado)
 
 1. Adicione o repositório helm
 
@@ -62,7 +62,7 @@ kubectl -n girus wait pod --all --for=condition=Ready -l app.kubernetes.io/part-
 
 5. Acesse o endereço da aplicação em http://localhost:8000
 
-### Instalando via kubectl
+### 📦 Instalando via kubectl
 
 1. Crie o namespace `girus`
 
@@ -91,7 +91,7 @@ kubectl -n girus wait pod --all --for=condition=Ready -l app.kubernetes.io/part-
 6. Acesse o endereço da aplicação em http://localhost:8000
 
 
-### Instalando via helm através do código fonte
+### 💻 Instalando via helm através do código fonte
 
 1. Clone o repositório do git
 
@@ -120,11 +120,11 @@ kubectl -n girus wait pod --all --for=condition=Ready -l app.kubernetes.io/part-
 
 5. Acesse o endereço da aplicação em http://localhost:8000
 
-## Configurações do chart através dos values
+## ⚙️ Configurações do chart através dos values
 
 Para configurar certos aspectos do chart como qual imagem utilizar no backend, quantidade de replicas, se tem possui integração com Ingress NGINX Controller, etc é preciso fornecer parametros na instalação/atualização, todos os parametros podem ser encontrados no arquivo [values.yaml](./charts/girus/values.yaml). Abaixo a explicação de cada parametro:
 
-### Nome do namespace
+### 🗂️ Nome do namespace
 
 Por padrão o chart será instalado no namespace fornecido no comando do helm, porém isso pode ser alterado através do parametro `namespaceOverride`.
 
@@ -142,7 +142,7 @@ EOF
 helm upgrade -i girus girus/girus --set namespaceOverride=meu-namespace
 ```
 
-### Label a qual os recursos fazem parte
+### 🏷️ Label a qual os recursos fazem parte
 
 Para customizar a label `app.kubernetes.io/part-of` que especifica de qual sistema os recursos fazem parte é só alterar o valo do parametro `label.partOf`.
 
@@ -161,7 +161,7 @@ EOF
 helm upgrade -i girus girus/girus --set label.partOf=meu-sistema
 ```
 
-### Deployment
+### 🚀 Deployment
 
 É possível customizar a imagem, quantidade de replicas e porta do container dos deployments do frontend e backend através do parametro `deployment.<backend|frontend>.<image|replicas|containerPort>`
 
@@ -189,11 +189,11 @@ helm upgrade -i girus girus/girus \
   --set deployment.frontend.image=eduardothums/girus:frontend-v1.0.7
 ```
 
-### Ingress
+### 🌐 Ingress
 
 Ao invés de expor a aplicação do frontend através do comando `kubectl port-foward` é possivel expo-lá pelo Ingress NGINX Controller apenas habilitando a sua configuração através do parametro `ingress.enabled`.
 
-**IMPORTANTE ⚠️:** se você estiver utilizando o kind para subir o cluster kubernetes então deve seguir as instruções na documentação oficial para configurar o [ingress](https://kind.sigs.k8s.io/docs/user/ingress). Abaixo um exemplo alterando cluster criado com o kind anteriormente na documentação:
+> ⚠️ Se você estiver utilizando o kind para subir o cluster kubernetes então deve seguir as instruções na documentação oficial para configurar o [ingress](https://kind.sigs.k8s.io/docs/user/ingress). Abaixo um exemplo alterando cluster criado com o kind anteriormente na documentação:
 
 1. Delete o cluster kind
 
@@ -281,7 +281,7 @@ EOF
 helm upgrade -i girus girus/girus --set ingress.enabled=true
 ```
 
-## Fluxo do CI/CD
+## 🔁 Fluxo do CI/CD
 
 Utilizamos o GitHub Actions como plataforma de CI/CD do projeto, onde é realizado validações de segurança, boas práticas, build de imagems e publicações de releases através de tags do git.
 
@@ -290,7 +290,7 @@ Existem dois momentos onde os workflows definidos em `./github/workflows` são d
 1. `security_check.yaml`: quando há algum pull request aberto com a branch target apontando para a `main`
 2. `release.yaml`: quando uma tag é criada no repositório
 
-### security_check.yaml
+### 🛡️ security_check.yaml
 
 Este workflow tem como objetivo:
 
@@ -298,7 +298,7 @@ Este workflow tem como objetivo:
 
 2. Aplicar validações de boas práticas na criação dos charts através do [helm lint](https://helm.sh/docs/helm/helm_lint/)
 
-### release.yaml
+### 🚀 release.yaml
 
 Este workflow tem como objetivo:
 
