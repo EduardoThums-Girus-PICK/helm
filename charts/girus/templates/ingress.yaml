@@ -1,4 +1,4 @@
-{{- if .Values.ingress.enabled }}
+{{- if and (eq .Values.ingress.enabled true) (eq .Values.ingress.external false) }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:

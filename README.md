@@ -252,6 +252,8 @@ Ao invés de expor a aplicação do frontend através do comando `kubectl port-f
 
 > ⚠️ Se você estiver utilizando o kind para subir o cluster kubernetes então deve seguir as instruções na documentação oficial para configurar o [ingress](https://kind.sigs.k8s.io/docs/user/ingress). Abaixo um exemplo alterando cluster criado com o kind anteriormente na documentação:
 
+> 💡 Caso queira instalar o ingress de forma separada é preciso utilizar o parametro `ingress.external` com o valor `true`.
+
 1. Delete o cluster kind
 
 ```bash
@@ -329,6 +331,7 @@ kubectl -n girus get ingress
 cat <<EOF | helm upgrade -i girus girus/girus --values -
 ingress:
   enabled: true
+  external: false
 EOF
 ```
 

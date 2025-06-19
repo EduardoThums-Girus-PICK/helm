@@ -5,7 +5,7 @@ label:
 
 deployment:
   backend:
-    image: eduardothums/girus:backend-v1.0.3
+    image: eduardothums/girus:backend-v1.0.4
     containerPort: 8080
     replicas: 1
   frontend:
@@ -16,3 +16,4 @@ deployment:
 
 ingress:
   enabled: false
+  external: false
