@@ -62,13 +62,13 @@ jobs:
         env:
           RACKSPACE_KUBECONFIG: "${{ secrets.RACKSPACE_KUBECONFIG }}"
 
-      - name: Generate manifest from chart template
+      - name: Add or force update helm repo
         shell: bash
         run: helm repo add --force-update girus https://EduardoThums-Girus-PICK.github.io/helm
 
-      - name: Deploy chart manifest
+      - name: Install or upgrade girus helm chart
         shell: bash
-        run: helm --kubeconfig kubeconfig.yaml upgrade --install --namespace girus --create-namespace --set ingress.enabled=true girus girus/girus
+        run: helm --kubeconfig kubeconfig.yaml upgrade --install --namespace girus --create-namespace --set ingress.enabled=true --set ingress.external=false girus girus/girus
 
       - name: Wait until resources are deployed
         shell: bash
