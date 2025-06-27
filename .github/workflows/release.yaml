@@ -46,31 +46,30 @@ jobs:
         env:
           GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
-  deploy:
-    if: ${{ secrets.RACKSPACE_KUBECONFIG != '' }}
-    runs-on: self-hosted
-    needs: release
+  # deploy:
+  #   runs-on: self-hosted
+  #   needs: release
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # 4.2.2
-        with:
-          fetch-depth: 0
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # 4.2.2
+  #       with:
+  #         fetch-depth: 0
 
-      - name: Configure kubeconfig from secrets
-        shell: bash
-        run: echo -n "$RACKSPACE_KUBECONFIG" | base64 -d > kubeconfig.yaml
-        env:
-          RACKSPACE_KUBECONFIG: "${{ secrets.RACKSPACE_KUBECONFIG }}"
+  #     - name: Configure kubeconfig from secrets
+  #       shell: bash
+  #       run: echo -n "$RACKSPACE_KUBECONFIG" | base64 -d > kubeconfig.yaml
+  #       env:
+  #         RACKSPACE_KUBECONFIG: "${{ secrets.RACKSPACE_KUBECONFIG }}"
 
-      - name: Add or force update helm repo
-        shell: bash
-        run: helm repo add --force-update girus https://EduardoThums-Girus-PICK.github.io/helm
+  #     - name: Add or force update helm repo
+  #       shell: bash
+  #       run: helm repo add --force-update girus https://EduardoThums-Girus-PICK.github.io/helm
 
-      - name: Install or upgrade girus helm chart
-        shell: bash
-        run: helm --kubeconfig kubeconfig.yaml upgrade --install --namespace girus --create-namespace --set ingress.enabled=true --set ingress.external=false girus girus/girus
+  #     - name: Install or upgrade girus helm chart
+  #       shell: bash
+  #       run: helm --kubeconfig kubeconfig.yaml upgrade --install --namespace girus --create-namespace --set ingress.enabled=true --set ingress.external=false girus girus/girus
 
-      - name: Wait until resources are deployed
-        shell: bash
-        run: kubectl --kubeconfig kubeconfig.yaml -n girus wait pod --all --for=condition=Ready -l app.kubernetes.io/part-of=girus --timeout 60s
+  #     - name: Wait until resources are deployed
+  #       shell: bash
+  #       run: kubectl --kubeconfig kubeconfig.yaml -n girus wait pod --all --for=condition=Ready -l app.kubernetes.io/part-of=girus --timeout 60s
