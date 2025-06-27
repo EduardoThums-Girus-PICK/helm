@@ -47,6 +47,7 @@ jobs:
           GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
   deploy:
+    if: ${{ secrets.RACKSPACE_KUBECONFIG != '' }}
     runs-on: self-hosted
     needs: release
 
