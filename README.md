@@ -401,4 +401,4 @@ Contribuições são sempre bem-vindas! Se você deseja sugerir melhorias, corri
 
 ### 💬 Dúvidas ou sugestões?
 
-Abra uma [issue](https://github.com/EduardoThums-Girus-PICK/frontend/issues) com sua pergunta, ideia ou problema!
+Abra uma [issue](https://github.com/EduardoThums-Girus-PICK/helm/issues) com sua pergunta, ideia ou problema!
