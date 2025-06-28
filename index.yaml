@@ -3,6 +3,17 @@ entries:
   girus:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2025-06-28T10:09:59.818953159-03:00"
+    description: Chart para a aplicação girus.
+    digest: 5130fbe8fe93a6255658faa3cf7b68db63ae0c0e8ccb878de99fb8e19054cfc2
+    icon: https://shorturl.at/Vinik
+    name: girus
+    type: application
+    urls:
+    - https://github.com/EduardoThums-Girus-PICK/helm/releases/download/girus-1.0.10/girus-1.0.10.tgz
+    version: 1.0.10
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2025-06-27T17:25:12.183959087-03:00"
     description: Chart para a aplicação girus.
     digest: 278402cb04b54191fdd09be4b494ce76b167f1a59f006266fdcd8c6ab327a065
@@ -141,4 +152,4 @@ entries:
     urls:
     - https://github.com/EduardoThums-Girus-PICK/helm/releases/download/girus-0.1.0/girus-0.1.0.tgz
     version: 0.1.0
-generated: "2025-06-27T17:25:12.184031293-03:00"
+generated: "2025-06-28T10:09:59.819058168-03:00"
