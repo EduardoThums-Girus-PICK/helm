@@ -9,7 +9,7 @@ deployment:
     containerPort: 8080
     replicas: 1
   frontend:
-    image: eduardothums/girus:frontend-v1.0.17
+    image: eduardothums/girus:frontend-v1.0.18
     containerPort: 8080
     replicas: 1
   imagePullSecretsName: ""
